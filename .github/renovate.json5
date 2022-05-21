@@ -1,9 +1,11 @@
 {
   "enabled": true,
+  "timezone": "Europe/Zurich",
   "semanticCommits": "enabled",
   "dependencyDashboard": true,
   "dependencyDashboardTitle": "Renovate Dashboard",
-  "suppressNotifications": ["prIgnoreNotification"],
+  "commitBody": "Signed-off-by: Thomas Deutsch <tuxpeople@users.noreply.github.com>",
+  "assignees": ["@tuxpeople"],
   "rebaseWhen": "conflicted",
   "schedule": [
     "every weekend"
@@ -70,6 +72,26 @@
         "registryUrl=(?<registryUrl>.*?) chart=(?<depName>.*?)\n *tag: v(?<currentValue>.*)\n"
       ],
       "datasourceTemplate": "helm"
+    },
+    // regexManager to read and process k8up CRD's
+    {
+      "fileMatch": [
+          "cluster/crds\\/k8up\\/kustomization\\.ya?ml$"
+      ],
+      "matchStrings": [
+          "datasource=(?<datasource>.*) depName=(?<depName>.*)\\s.*\\/(?<currentValue>.*?)\\/"
+      ]
+    },
+    // Generic Flux Regex Manager
+    {
+      "fileMatch": [
+        "clusters/.+\\.ya?ml$"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( registryUrl=(?<registryUrl>.*?))?( versioning=(?<versioning>.*=?))?\n *tag: (?<currentValue>.*=?)"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}",
+      "registryUrlTemplate": "{{#if registryUrl}}{{{registryUrl}}}{{else}}{{/if}}"
     }
   ],
   "packageRules": [
@@ -117,6 +139,16 @@
       "matchDatasources": ["helm"],
       "matchUpdateTypes": ["patch"],
       "labels": ["renovate/helm", "dep/patch"]
+    },
+    {
+      "matchDatasources": ["github-releases", "docker"],
+      "matchPackagePatterns": [
+        "external-snapshotter",
+        "snapshot-controller"
+      ],
+      "groupName": "external-snapshotter-suite",
+      "additionalBranchPrefix": "",
+      "separateMinorPatch": true
     }
   ]
 }

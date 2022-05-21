@@ -13,17 +13,6 @@ tasks:
     cmds:
       - kubectl create namespace flux-system --dry-run=client -o yaml | kubectl apply -f -
 
-  flux:secret:
-    desc: Create the Age secret in the flux-system namespace
-    cmds:
-      - cat {{.SOPS_AGE_KEY_FILE}} | kubectl -n flux-system create secret generic sops-age --from-file=age.agekey=/dev/stdin
-    preconditions:
-      - sh: test -f {{.SOPS_AGE_KEY_FILE}}
-        msg: |
-          Age key file is not found. Did you forget to create it?
-    vars:
-      SOPS_AGE_KEY_FILE: ~/.config/sops/age/keys.txt
-
   flux:install:
     desc: Install Flux into your cluster, run this again if it fails
     cmds:
@@ -33,6 +22,10 @@ tasks:
     desc: Force update Flux to pull in changes from your Git repository
     cmds:
       - flux reconcile source git flux-system {{.CLI_ARGS | default "-n flux-system"}}
+      - flux reconcile kustomization flux-system
+      - flux reconcile kustomization crds
+      - flux reconcile kustomization core
+      - flux reconcile kustomization apps
 
   nodes:
     desc: List all the nodes in your cluster
