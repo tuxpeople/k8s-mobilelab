@@ -39,3 +39,13 @@ spec:
       requests:
         cpu: 100m
         memory: 64Mi
+    ingress:
+      enabled: false
+      className: "traefik"
+      annotations:
+        traefik.ingress.kubernetes.io/router.entrypoints: websecure
+      hosts:
+        - host: podinfo.${SECRET_DOMAIN_INTERNAL}
+          paths:
+            - path: /
+              pathType: Prefix
