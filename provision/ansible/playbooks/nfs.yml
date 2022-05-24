@@ -1,0 +1,28 @@
+---
+- hosts:
+    - nfs
+  become: true
+  gather_facts: true
+  any_errors_fatal: true
+  pre_tasks:
+    - name: Pausing for 5 seconds...
+      pause:
+        seconds: 5
+
+  tasks:
+    - name: Create a ext4 filesystem on /dev/sda1 and check disk blocks
+      community.general.filesystem:
+        fstype: ext4
+        dev: /dev/sda1
+        opts: -cc
+
+    - name: Ensure lv mounts exists
+      mount:
+        src: "/dev/longhorn_vg/data_lv"
+        path: "/var/lib/longhorn"
+        opts: rw,nosuid
+        state: mounted
+        fstype: ext4
+
+    - include_role:
+        name: geerlingguy.nfs
