@@ -27,9 +27,5 @@ spec:
   healthChecks:
     - apiVersion: helm.toolkit.fluxcd.io/v2beta1
       kind: HelmRelease
-      name: cert-manager
-      namespace: cert-manager
-    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
-      kind: HelmRelease
       name: metallb
       namespace: metallb-system
