@@ -5,9 +5,9 @@ metadata:
   name: traefik-dashboard
   namespace: networking
   annotations:
-    kubernetes.io/ingress.class: traefik
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
 spec:
+  ingressClassName: traefik
   rules:
     - host: "traefik.${SECRET_DOMAIN_INTERNAL}"
       http:
