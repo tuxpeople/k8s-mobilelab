@@ -44,6 +44,7 @@ spec:
       className: "traefik"
       annotations:
         traefik.ingress.kubernetes.io/router.entrypoints: websecure
+        traefik.backend.loadbalancer.stickiness: "false"
       hosts:
         - host: podinfo.${SECRET_DOMAIN_INTERNAL}
           paths:
