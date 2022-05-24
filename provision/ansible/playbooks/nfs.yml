@@ -17,7 +17,7 @@
         opts: -cc
 
     - name: "Ensure directory {{nfs_folder}} exist"
-      file:  # noqa 208
+      file:
         path: "{{nfs_folder}}"
         state: directory
 
