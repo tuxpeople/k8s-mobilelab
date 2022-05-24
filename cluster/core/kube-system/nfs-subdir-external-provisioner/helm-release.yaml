@@ -37,5 +37,5 @@ spec:
       reclaimPolicy: Delete
       archiveOnDelete: true
     nfs:
-      server: 10.20.30.40
-      path: /volume2/kubernetes/nfs-subdir-external-provisioner
+      server: 192.168.9.5
+      path: /data/nfs/kubernetes
