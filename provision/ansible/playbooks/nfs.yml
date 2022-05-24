@@ -10,13 +10,12 @@
         seconds: 5
 
   tasks:
-    - name: "Create a ext4 filesystem on {{nfs_device}} and check disk blocks"
+    - name: "Create a ext4 filesystem on {{nfs_device}}"
       community.general.filesystem:
         fstype: ext4
         dev: "{{nfs_device}}"
-        opts: -cc
 
-    - name: Ensure lv mounts exists
+    - name: "Ensure {{nfs_folder}} mounts exists"
       mount:
         src: "{{nfs_device}}"
         path: "{{nfs_folder}}"
