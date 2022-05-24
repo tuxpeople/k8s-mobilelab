@@ -10,16 +10,16 @@
         seconds: 5
 
   tasks:
-    - name: Create a ext4 filesystem on /dev/sda1 and check disk blocks
+    - name: "Create a ext4 filesystem on {{nfs_device}} and check disk blocks"
       community.general.filesystem:
         fstype: ext4
-        dev: /dev/sda1
+        dev: "{{nfs_device}}"
         opts: -cc
 
     - name: Ensure lv mounts exists
       mount:
-        src: "/dev/longhorn_vg/data_lv"
-        path: "/var/lib/longhorn"
+        src: "{{nfs_device}}"
+        path: "{{nfs_folder}}"
         opts: rw,nosuid
         state: mounted
         fstype: ext4
