@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - traefik
   - kube-prometheus-stack
+  - https://raw.githubusercontent.com/metallb/metallb/main/charts/metallb/charts/crds/templates/crds.yaml
