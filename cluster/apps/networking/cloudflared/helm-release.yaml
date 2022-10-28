@@ -31,7 +31,7 @@ spec:
   values:
     image:
       repository: ghcr.io/linuxserver/baseimage-alpine
-      pullPolicy: always
+      pullPolicy: Always
       tag: 3.15
 
     service:
