@@ -65,6 +65,6 @@ spec:
       - name: CF_TUNNEL_CONFIG
         value: |
           ingress:
-            - hostname: podinfo.mcluster.eighty-three.me
+            - hostname: m-podinfo.eighty-three.me
               service: http://podinfo.default.svc.cluster.local:9898
             - service: http_status:404
