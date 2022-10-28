@@ -34,16 +34,14 @@
   },
   "kubernetes": {
     "fileMatch": [
-      "cluster/.+\\.ya?ml$",
-      "provision/ansible/.+\\.ya?ml.j2$"
+      "cluster/.+\\.ya?ml$"
     ]
   },
   "regexManagers": [
     // Read and process GitHub Releases
     {
       "fileMatch": [
-        "cluster/.+\\.ya?ml$",
-        "provision/ansible/.+\\.ya?ml$"
+        "cluster/.+\\.ya?ml$"
       ],
       "matchStrings": [
         "datasource=(?<datasource>.*?)( versioning=(?<versioning>.*?))?\n *url: https:\/\/github\\.com\/(?<depName>.*?)\\.git\n *ref:\n *tag: (?<currentValue>.*)\n",
