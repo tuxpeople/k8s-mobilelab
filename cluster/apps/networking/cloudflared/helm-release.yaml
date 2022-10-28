@@ -36,9 +36,7 @@ spec:
 
     service:
       main:
-        ports:
-          http:
-            port: 80
+        enabled: false
 
     args:
       - sleep
