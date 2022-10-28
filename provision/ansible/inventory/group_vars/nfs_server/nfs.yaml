@@ -1,3 +1,0 @@
-nfs_device: "/dev/sda1"
-nfs_folder: "/data/nfs"
-nfs_exports: ["{{nfs_folder}}/kubernetes *(rw,sync,no_root_squash)"]
