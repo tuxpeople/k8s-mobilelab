@@ -30,4 +30,4 @@ spec:
     recreate: true
   values:
     crds:
-      enabled: true
+      enabled: false
