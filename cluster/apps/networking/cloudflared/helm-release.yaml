@@ -32,7 +32,7 @@ spec:
     image:
       repository: ghcr.io/linuxserver/baseimage-alpine
       pullPolicy: Always
-      tag: 3.15
+      tag: "3.15"
 
     service:
       main:
