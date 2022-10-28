@@ -42,8 +42,8 @@ spec:
 
     resources:
       limits:
-        memory: "50Mi"
-        cpu: "100m"
+        memory: "128Mi"
+        cpu: "500m"
 
     args:
       - sleep
