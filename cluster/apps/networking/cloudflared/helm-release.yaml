@@ -58,6 +58,10 @@ spec:
       - name: CF_TUNNEL_CONFIG
         value: |
           ingress:
+            - hostname: m-api.eighty-three.me
+              service: tcp://kubernetes.default.svc:443
+              originRequest:
+                proxyType: socks
             - hostname: m-podinfo.eighty-three.me
               service: http://podinfo.default.svc.cluster.local:9898
             - service: http_status:404
