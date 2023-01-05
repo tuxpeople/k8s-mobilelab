@@ -35,7 +35,7 @@ spec:
       name: nfs-subdir-external-provisioner
       allowVolumeExpansion: true
       reclaimPolicy: Delete
-      archiveOnDelete: true
+      archiveOnDelete: false
     nfs:
       server: 192.168.9.5
       path: /data/nfs/kubernetes
