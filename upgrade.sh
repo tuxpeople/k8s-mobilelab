@@ -26,6 +26,7 @@ step "Upgrade Talos OS for all nodes"
 for NODE in $(grep -A${MEMBERS} endpoints ~/.talos/config | tail -${MEMBERS} | awk '{ print $2 }')
 do
     talosctl upgrade -n ${NODE} --image ghcr.io/siderolabs/installer:$TALOS_VERSION
+    sleep 5
 done
 
 step "Upgrade talosctl"
@@ -33,7 +34,7 @@ sudo curl --silent -qLo /usr/local/bin/talosctl https://github.com/siderolabs/ta
 sudo chmod +x /usr/local/bin/talosctl
 
 step "Upgrade kubectl"
-sudo curl --silent -qLo /usr/local/bin/kubectl "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo curl --silent -qLo /usr/local/bin/kubectl "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl"
 sudo chmod +x /usr/local/bin/kubectl
 
 step "Upgrade k9s"
