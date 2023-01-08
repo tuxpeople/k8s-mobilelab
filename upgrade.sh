@@ -30,6 +30,18 @@ done
 
 step "Upgrade talosctl"
 sudo curl --silent -qLo /usr/local/bin/talosctl https://github.com/siderolabs/talos/releases/download/$TALOS_VERSION/talosctl-$(uname -s | tr "[:upper:]" "[:lower:]")-arm64
+sudo chmod +x /usr/local/bin/talosctl
+
+step "Upgrade kubectl"
+sudo curl --silent -qLo /usr/local/bin/kubectl "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo chmod +x /usr/local/bin/kubectl
+
+step "Upgrade k9s"
+K9S_VERSION=$(curl --silent -qI https://github.com/derailed/k9s/releases/latest | awk -F '/' '/^location/ {print  substr($NF, 1, length($NF)-1)}')
+curl --silent -qLo /tmp/k9s_Linux_arm64.tar.gz https://github.com/derailed/k9s/releases/download/${K9S_VERSION}/k9s_Linux_arm64.tar.gz
+sudo tar -xzf /tmp/k9s_Linux_arm64.tar.gz -C /usr/local/bin/ k9s
+sudo chmod +x /usr/local/bin/k9s
+sudo rm /tmp/k9s_Linux_arm64.tar.gz
 
 step "Upgrade Kubernetes version"
 talosctl upgrade-k8s --to ${KUBERNETES_VERSION}
