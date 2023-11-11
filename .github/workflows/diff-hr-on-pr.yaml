@@ -20,7 +20,7 @@ jobs:
       files: "${{ steps.extract.outputs.files }}"
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
     - name: Get changes
       uses: dorny/paths-filter@v2
       id: filter
@@ -48,18 +48,18 @@ jobs:
       fail-fast: false
     steps:
     - name: Setup Kubernetes Tools
-      uses: yokawasa/action-setup-kube-tools@v0.9.3
+      uses: yokawasa/action-setup-kube-tools@af4ebb1af1efd30c5bd84a2e9773355ad6362a33 # v0.9.3
       with:
         setup-tools: |
           helmv3
           yq
     - name: Checkout live branch
-      uses: actions/checkout@v4
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
       with:
         ref: ${{ env.conf_live_branch }}
         path: live
     - name: Checkout PR branch
-      uses: actions/checkout@v4
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
       with:
         path: pr
     - name: Create diff
@@ -108,7 +108,7 @@ jobs:
         echo "::set-output name=message::$(echo "$message" | jq --raw-input --slurp)"
 
     - name: Create comment
-      uses: peter-evans/create-or-update-comment@v3
+      uses: peter-evans/create-or-update-comment@23ff15729ef2fc348714a3bb66d2f655ca9066f2 # v3
       with:
         issue-number: ${{ github.event.pull_request.number }}
         body: "${{ fromJSON(steps.diff.outputs.message) }}"
