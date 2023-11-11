@@ -1,152 +1,61 @@
 {
-  "enabled": true,
-  "timezone": "Europe/Zurich",
-  "semanticCommits": "enabled",
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base",
+    "docker:enableMajor",
+    ":disableRateLimiting",
+    ":dependencyDashboard",
+    ":semanticCommits",
+    ":enablePreCommit",
+    ":automergeDigest",
+    ":automergePr",
+    ":automergeMinor",
+    ":automergeLinters",
+    ":automergeRequireAllStatusChecks",
+    // "github>onedr0p/flux-cluster-template//.github/renovate/autoMerge.json5",
+    "github>onedr0p/flux-cluster-template//.github/renovate/commitMessage.json5",
+    "github>onedr0p/flux-cluster-template//.github/renovate/groups.json5",
+    "github>onedr0p/flux-cluster-template//.github/renovate/labels.json5",
+    "github>onedr0p/flux-cluster-template//.github/renovate/semanticCommits.json5",
+    "helpers:pinGitHubActionDigests"
+  ],
   "dependencyDashboard": true,
-  "dependencyDashboardTitle": "Renovate Dashboard",
-  "commitBody": "Signed-off-by: Thomas Deutsch <tuxpeople@users.noreply.github.com>",
-  "assignees": ["@tuxpeople"],
+  "dependencyDashboardTitle": "Renovate Dashboard 🤖",
+  "suppressNotifications": ["prIgnoreNotification"],
   "rebaseWhen": "conflicted",
-  "schedule": [
-    "every weekend"
-  ],
-  // set up ignored deps
-  "ignoreDeps": [
-    "ghcr.io/fluxcd/helm-controller",
-    "ghcr.io/fluxcd/image-automation-controller",
-    "ghcr.io/fluxcd/image-reflector-controller",
-    "ghcr.io/fluxcd/kustomize-controller",
-    "ghcr.io/fluxcd/notification-controller",
-    "ghcr.io/fluxcd/source-controller"
-  ],
+  "schedule": ["every weekend"],
   "pre-commit": {
     "enabled": true
   },
   "flux": {
-    "fileMatch": [
-      "cluster/.+\\.ya?ml$"
-    ]
+    "fileMatch": ["kubernetes/.+\\.ya?ml$"]
   },
   "helm-values": {
-    "fileMatch": [
-      "cluster/.+\\.ya?ml$"
-    ]
+    "fileMatch": ["kubernetes/.+\\.ya?ml$"]
   },
   "kubernetes": {
     "fileMatch": [
-      "cluster/.+\\.ya?ml$"
+      "ansible/.+\\.ya?ml(\\.j2)?$",
+      "kubernetes/.+\\.ya?ml$"
     ]
   },
   "regexManagers": [
-    // Read and process GitHub Releases
     {
+      "description": "Process various other dependencies",
       "fileMatch": [
-        "cluster/.+\\.ya?ml$"
+        "ansible/.+\\.ya?ml(\\.j2)?$",
+        "kubernetes/.+\\.ya?ml$"
       ],
       "matchStrings": [
-        "datasource=(?<datasource>.*?)( versioning=(?<versioning>.*?))?\n *url: https:\/\/github\\.com\/(?<depName>.*?)\\.git\n *ref:\n *tag: (?<currentValue>.*)\n",
-        "datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\n.*?_version: \"(?<currentValue>.*)\"\n",
-        "datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\n.*?_VERSION=\"(?<currentValue>.*)\"\n"
+        "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( registryUrl=(?<registryUrl>\\S+))?\n.*?\"(?<currentValue>.*)\"\n"
       ],
-      "datasourceTemplate": "{{#if datasource}}{{{datasource}}}{{else}}github-releases{{/if}}",
-      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
-    },
-    // regexManager to read and process cert-manager CRD's
-    {
-      "fileMatch": [
-        "cluster/crds/cert-manager/.+\\.ya?ml$"
-      ],
-      "matchStrings": [
-        "registryUrl=(?<registryUrl>.*?) chart=(?<depName>.*?)\n.*\\/(?<currentValue>.*?)\\/"
-      ],
-      "datasourceTemplate": "helm"
-    },
-    // regexManager to read and process Traefik CRD's
-    {
-      "fileMatch": [
-        "cluster/crds/traefik/.+\\.ya?ml$"
-      ],
-      "matchStrings": [
-        "registryUrl=(?<registryUrl>.*?) chart=(?<depName>.*?)\n *tag: v(?<currentValue>.*)\n"
-      ],
-      "datasourceTemplate": "helm"
-    },
-    // regexManager to read and process k8up CRD's
-    {
-      "fileMatch": [
-          "cluster/crds\\/k8up\\/kustomization\\.ya?ml$"
-      ],
-      "matchStrings": [
-          "datasource=(?<datasource>.*) depName=(?<depName>.*)\\s.*\\/(?<currentValue>.*?)\\/"
-      ]
-    },
-    // Generic Flux Regex Manager
-    {
-      "fileMatch": [
-        "clusters/.+\\.ya?ml$"
-      ],
-      "matchStrings": [
-        "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( registryUrl=(?<registryUrl>.*?))?( versioning=(?<versioning>.*=?))?\n *tag: (?<currentValue>.*=?)"
-      ],
-      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}",
-      "registryUrlTemplate": "{{#if registryUrl}}{{{registryUrl}}}{{else}}{{/if}}"
+      "datasourceTemplate": "{{#if datasource}}{{{datasource}}}{{else}}github-releases{{/if}}"
     }
   ],
   "packageRules": [
-    // setup datasources
     {
-      "matchDatasources": ["helm"],
-      "separateMinorPatch": true,
-      "ignoreDeprecated": true
-    },
-    // global docker datasource settings
-    {
-      "matchDatasources": ["docker"],
-      "enabled": true,
-      "commitMessageTopic": "container image {{depName}}",
-      "commitMessageExtra": "to {{#if isSingleVersion}}v{{{newVersion}}}{{else}}{{{newValue}}}{{/if}}",
-      "matchUpdateTypes": ["major", "minor", "patch"]
-    },
-    // add labels according to package and update types
-    {
-      "matchDatasources": ["docker"],
-      "matchUpdateTypes": ["major"],
-      "labels": ["renovate/image", "dep/major"]
-    },
-    {
-      "matchDatasources": ["docker"],
-      "matchUpdateTypes": ["minor"],
-      "labels": ["renovate/image", "dep/minor"]
-    },
-    {
-      "matchDatasources": ["docker"],
-      "matchUpdateTypes": ["patch"],
-      "labels": ["renovate/image", "dep/patch"]
-    },
-    {
-      "matchDatasources": ["helm"],
-      "matchUpdateTypes": ["major"],
-      "labels": ["renovate/helm", "dep/major"]
-    },
-    {
-      "matchDatasources": ["helm"],
-      "matchUpdateTypes": ["minor"],
-      "labels": ["renovate/helm", "dep/minor"]
-    },
-    {
-      "matchDatasources": ["helm"],
-      "matchUpdateTypes": ["patch"],
-      "labels": ["renovate/helm", "dep/patch"]
-    },
-    {
-      "matchDatasources": ["github-releases", "docker"],
-      "matchPackagePatterns": [
-        "external-snapshotter",
-        "snapshot-controller"
-      ],
-      "groupName": "external-snapshotter-suite",
-      "additionalBranchPrefix": "",
-      "separateMinorPatch": true
+      "packagePatterns": ["^ghcr.io\\/linuxserver\\/"],
+      "versionScheme": "regex:^(?<major>v?\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)*$"
     }
   ]
 }
