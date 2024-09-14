@@ -1,0 +1,3 @@
+---
+providerRegex: ^(mobile-talos01|mobile-talos02|mobile-talos03)$
+bypassDnsResolution: true
