@@ -67,7 +67,7 @@ spec:
         #% if bootstrap_cloudflare.acme.production %#
         default-ssl-certificate: "network/${SECRET_DOMAIN/./-}-production-tls"
         #% else %#
-        default-ssl-certificate: "network/${SECRET_DOMAIN/./-}-staging-tls"
+        default-ssl-certificate: "network/${SECRET_DOMAIN/./-}-production-tls"
         #% endif %#
       resources:
         requests:

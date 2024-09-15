@@ -28,7 +28,7 @@ spec:
     controller:
       service:
         annotations:
-          external-dns.alpha.kubernetes.io/hostname: "external.${SECRET_DOMAIN}"
+          external-dns.alpha.kubernetes.io/hostname: "mobile-cluster.${SECRET_DOMAIN}"
           io.cilium/lb-ipam-ips: "#{ bootstrap_cloudflare.tunnel.ingress_vip }#"
         externalTrafficPolicy: Cluster
       ingressClassResource:
@@ -70,7 +70,7 @@ spec:
         #% if bootstrap_cloudflare.acme.production %#
         default-ssl-certificate: "network/${SECRET_DOMAIN/./-}-production-tls"
         #% else %#
-        default-ssl-certificate: "network/${SECRET_DOMAIN/./-}-staging-tls"
+        default-ssl-certificate: "network/${SECRET_DOMAIN/./-}-production-tls"
         #% endif %#
       resources:
         requests:
